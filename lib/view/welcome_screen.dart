@@ -28,7 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget buildUi() {
     return Scaffold(
-      backgroundColor: Colors.deepPurpleAccent,
+      backgroundColor: Colors.white,
       body: SafeArea(
         top: true, bottom: false, left: true, right: true,
         child: SizedBox(
@@ -61,9 +61,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Navigator.pushNamed(context, AppRoutes.home);
                             // Navigator.push(context, MaterialPageRoute(builder: (context) => AuthPage()));
                           },
-                          icon: const Icon(Icons.arrow_forward_ios, color: Colors.white,
+                          icon: const Icon(Icons.arrow_forward_ios, color: Colors.green,
                           ),
                         ),
+                        // child: MaterialButton(
+                        //   child: BoxDecoration(
+                        //     gradient: myGradient,
+                        //     borderRadius: const BorderRadius.all(Radius.circular(80.0))
+                        //   ),
+                        //   onPressed: () => Navigator.pushNamed(context, AppRoutes.home))
                       ),
                     )
             ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tm_assessment/view/home_screen.dart';
+import 'package:tm_assessment/view/Home%20Screen/home_screen.dart';
 import 'package:tm_assessment/view/welcome_screen.dart';
 
 class AppRoutes {
@@ -9,8 +9,8 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      welcome: (BuildContext context) => WelcomeScreen(),
-      home: (BuildContext context) => HomeScreen(),
+      welcome: (BuildContext context) => const WelcomeScreen(),
+      home: (BuildContext context) => const HomeScreen(),
       // report: (BuildContext context) => WelcomeScreen(),
     };
   }
