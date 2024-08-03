@@ -56,10 +56,11 @@ class HomeViewModel extends ChangeNotifier {
 
     DateTime prevMonth = DateTime(now.year, now.month - 1, now.day);
 
-    String formattedPrevMonth = DateFormat('MMMM').format(prevMonth);
+    String formattedPrevMonth = DateFormat('MMMM').format(prevMonth).toUpperCase();
+    String abbreviatedPrevMonth = DateFormat('MMM').format(prevMonth).toUpperCase();
 
     _displayMonthController.text = formattedPrevMonth.toUpperCase();
-    _valueMonthController.text = prevMonth.toString();
+    _valueMonthController.text = abbreviatedPrevMonth;
 
     notifyListeners();
   }
@@ -75,11 +76,25 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<GlobalDualValue> month = [];
+  Future filterData(context, String month) async{
+    /// clear the existing top5 list
+    top5Choc.clear();
 
-  Future filterData(context) async{
-    month = allData.where((e){
-      
-    });
+    var filteredChocolates = allData.where((e) => e.productionDate!.contains(month)).toList();
+
+    /// sort by volume in descending order
+    filteredChocolates.sort((a, b) => b.volume!.compareTo(a.volume!));
+
+    /// take the top 5
+    var top5Chocolates = filteredChocolates.take(5).toList();
+     /// print the filtered choc to ensure the list are correct based on month
+      for (var choc in top5Chocolates) {
+        debugPrint('Chocolate Type: ${choc.chocolateType}, Production Date: ${choc.productionDate}, Volume: ${choc.volume}');
+        }
+
+      top5Choc.addAll(top5Chocolates.map((e) => GlobalDualValue(title: e.chocolateType.toString(), value: e.volume.toString())).toList());
+
+    notifyListeners();
   }
+  // TODO: x axis tukar choc type, hanya ada 5  sahaja
 }

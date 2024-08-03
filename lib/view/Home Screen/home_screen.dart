@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.delayed(Duration.zero, () {
       viewModel.getListData(context);
       /// TODO: buat latest month as first load
+      viewModel.filterData(context, viewModel.displayMonthController.text);
     }).then((value) {
       /// TODO: stop loading
 
@@ -40,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
     viewModel.displayMonthController.dispose();
     viewModel.valueMonthController.dispose();
+
+    viewModel.top5Choc.clear();
   }
 
   @override
@@ -73,10 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   // graph
                   _graph(),
 
-                  // TODO: list top 5
-                  Label(title: "Top 5 Products")
-                  // ListTile
-                  
+                  // Label(title: "Top 5 Products"),
+                  _top5()
                 ],
               )
             )
@@ -85,6 +86,36 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ),
       );
+  }
+
+  // _top5() {
+  //   ...viewModel.listChoc.isEmpty ? const Text("No Data") :
+  //   ...viewModel.listChoc.map((e) => Column(
+  //     children: [
+  //       ListTile(
+  //         minLeadingWidth: 0,
+  //         minVerticalPadding: 0,
+  //         title: Text(e.title),
+  //       )
+  //     ],
+  //   )).toList(); 
+  // }
+  Widget _top5() {
+    return Column(
+      children: [
+        ...viewModel.top5Choc.map((e) => Column(
+          children: [
+            ListTile(
+              minLeadingWidth: 0,
+              minVerticalPadding: 0,
+              title: Text(e.title),
+              trailing: Text(e.value)
+            ),
+            const GlobalDivider()
+          ],
+        )).toList(),
+      ],
+    );
   }
 
   Widget _month(List<GlobalDualValue> month) {
@@ -100,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
               viewModel.displayMonthController.text = e.title;
               viewModel.valueMonthController.text = e.value;
 
-              viewModel.getAllData(context);
+              viewModel.filterData(context, viewModel.valueMonthController.text);
             });
             Navigator.pop(context);
           },
@@ -116,6 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _graph() {
+    List<ChartData> chartData = viewModel.top5Choc.map((e) => ChartData(e.title, int.parse(e.value))).toList();
+
     return Container(
       padding: const EdgeInsets.only(top: 40),
       margin: const EdgeInsets.only(right: 5),
@@ -137,191 +170,20 @@ class _HomeScreenState extends State<HomeScreen> {
         position: LegendPosition.bottom,
         isVisible: true,
       ),
+      title: const ChartTitle(text: "Top 5 Chocolates"),
       enableAxisAnimation: true,
-      series: <StackedLineSeries<ChocVolume, String>>[
-        /// Flake
-        StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Flake",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-          
-          /// Caramel
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Caramel",
-          /// Flake
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
+      series: <StackedLineSeries<ChartData, String>>[
 
-          /// Twirl
-          StackedLineSeries<ChocVolume, String>(
+        StackedLineSeries(
           markerSettings: const MarkerSettings(isVisible: true),
-          name: "Twirl",
-          /// Flake
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
+          name: "Volume",
+          dataSource: chartData,
+          xValueMapper: (ChartData data, _) => data.chocolateType, 
+          yValueMapper: (ChartData data, _) => data.volume,
           enableTooltip: true,
           ),
+      ]
 
-          /// Wispa
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Wispa",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// Chomp
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Chomp",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// Fudge
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Fudge",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// Crunchie
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Crunchie",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// DoubleDecker
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Double Decker",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// WispaGold
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Wispa Gold",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-
-          /// Picnic
-          StackedLineSeries<ChocVolume, String>(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Picnic",
-          dataSource: <ChocVolume>[
-            ChocVolume(viewModel.listMonth[0].title, 1),
-            ChocVolume(viewModel.listMonth[1].title, 2),
-            ChocVolume(viewModel.listMonth[2].title, 3),
-            ChocVolume(viewModel.listMonth[3].title, 4),
-            ChocVolume(viewModel.listMonth[4].title, 5),
-            ChocVolume(viewModel.listMonth[5].title, 6),
-            ChocVolume(viewModel.listMonth[6].title, 7)
-          ],
-          xValueMapper: (ChocVolume month, _) => month.month, 
-          yValueMapper: (ChocVolume month, _) => month.volume,
-          enableTooltip: true,
-          ),
-      ],
-      )
-    );
+    ));
   }
 }

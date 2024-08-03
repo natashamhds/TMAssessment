@@ -1,16 +1,4 @@
-class TotalListChoc{
-  final List<ChocModel> choc;
-  TotalListChoc({required this.choc});
-
-  factory TotalListChoc.fromJson(List<dynamic> json) {
-    List<ChocModel> choc = <ChocModel>[];
-    choc = json.map((i) => ChocModel.fromJson(i)).toList();
-    return TotalListChoc(
-        choc: choc
-    );
-  }
-}
-
+/// parse the JSON response into dart O
 class ChocModel {
   String? chocolateType;
   String? productionDate;
@@ -33,15 +21,9 @@ class ChocModel {
   }
 }
 
-class ChocVolume {
-  ChocVolume(this.month, this.volume);
-  final String? month;
-  final double? volume;
+class ChartData {
+  final String chocolateType;
+  final int volume;
 
-  factory ChocVolume.fromJson(Map<String, dynamic> json){
-    return ChocVolume(
-        json['month'].toString(),
-        json['volume'] as double?
-    );
-  }
+  ChartData(this.chocolateType, this.volume);
 }
