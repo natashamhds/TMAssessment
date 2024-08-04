@@ -223,6 +223,7 @@ class GlobalDivider extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class chocTile extends StatelessWidget {
   String title;
   List list;
