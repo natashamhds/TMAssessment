@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tm_assessment/constant/responsive.dart';
 
 class GlobalWidget {
   RoundedRectangleBorder borderDialog() {
@@ -137,8 +138,9 @@ class GlobalForm extends StatelessWidget {
       title: Text(title,
           style: GoogleFonts.poppins(textStyle: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 8.sp))),
+            fontSize: ResponsiveWidget.isLargeScreen(context) ? 8.sp : 16.sp))),
       subtitle: Column(
+        
         mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
@@ -152,8 +154,7 @@ class GlobalForm extends StatelessWidget {
                       signed: true, decimal: true)
                   : TextInputType.emailAddress,
               style:  GoogleFonts.poppins(textStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 7.5.sp)),
+            fontSize: ResponsiveWidget.isLargeScreen(context) ? 7.5.sp : 15.5.sp)),
               minLines: 1,
               maxLines: null,
 
@@ -261,7 +262,7 @@ class chocTile extends StatelessWidget {
                   minLeadingWidth: 0,
                   minVerticalPadding: 0,
                   title: Text(e.title, style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))),
-                  trailing: Text(e.value, style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 9.sp))),
+                  trailing: Text(e.value, style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: ResponsiveWidget.isLargeScreen(context) ? 9.sp : 14.sp))),
                 ),
               ),
               const GlobalDivider()

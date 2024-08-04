@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tm_assessment/constant/config.dart';
+import 'package:tm_assessment/constant/responsive.dart';
 import 'package:tm_assessment/constant/widgets.dart';
 import 'package:tm_assessment/model/choc_model.dart';
 import 'package:tm_assessment/services/service_locator.dart';
@@ -65,24 +66,29 @@ class _FilterByChocState extends State<FilterByChoc> {
         builder: (context, model, child) => SafeArea(
           top: true, bottom: false, left: false, right: false,
           child: ColoredBox(color: Colors.white,
-          child: viewModel.isLoading ? Center(child: CircularProgressIndicator(color: Colors.green)) : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
+          child: viewModel.isLoading ? Center(child: CircularProgressIndicator(color: Colors.green)) : 
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
 
-              // month form
-              _choc(viewModel.listChoc),
+                // month form
+                _choc(viewModel.listChoc),
 
-              // graph
-              _graph(),
+                // graph
+                _graph(),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // top5
-              _top5()
-            ],
+                // top5
+                _top5(),
+
+                const SizedBox(height: 50),
+              ],
           ) 
-          ),
+          ))
         ),
       ),
     );
@@ -149,11 +155,11 @@ class _FilterByChocState extends State<FilterByChoc> {
         child: SfCartesianChart(
           key: UniqueKey(),
         plotAreaBorderColor: Colors.transparent,
-        primaryXAxis: const CategoryAxis(
+        primaryXAxis: CategoryAxis(
           axisLine: AxisLine(width: 0),
           majorGridLines: MajorGridLines(width: 0),
           majorTickLines: MajorTickLines(width: 0),
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: ResponsiveWidget.isLargeScreen(context) ? TextStyle(color: Colors.white) : TextStyle(color: Colors.transparent),
         ),
         primaryYAxis: NumericAxis(
           majorGridLines: const MajorGridLines(width: 0),
