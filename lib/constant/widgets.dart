@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 
 class GlobalWidget {
@@ -74,40 +75,28 @@ class GlobalWidget {
     );
   }
 
-  /// global popup
-  Future showpopup(BuildContext context,
-      {required String msg,
-      required String args,
-      required GestureTapCallback ontap,
-      String? title}) async {
-    return showDialog(
-      barrierDismissible: args == "-100" ? false : true,
-      context: context,
-      builder: (BuildContext context) {
-        // return GeneralPopup(msg: msg, args: args, ontap: ontap);
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          title: Text(msg),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: GlobalRedButton(title: msg, ontap: ontap),
-              )
-          ],
-          );
-      },
-    );
-  }
+  Future popup(BuildContext context, {
+    required String title,
+    required String msg,
+    required ContentType contentType
+    }) async {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: AwesomeSnackbarContent(title: title, message: msg, contentType: contentType), 
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    elevation: 0
+    ));
+    }
 }
-
 
 /// radio button check
 class GlobalRadioButtonCheck extends StatelessWidget {
-  const GlobalRadioButtonCheck({super.key});
+  const GlobalRadioButtonCheck({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return const Icon(Icons.radio_button_checked, color: Colors.red, size: 18);
+    return Icon(Icons.radio_button_checked, color: title == "Chocolate" ?Colors.purple.shade200 : Colors.pink.shade200, size: 18);
   }
 }
 
@@ -218,25 +207,6 @@ class GlobalRedButton extends StatelessWidget {
           onPressed: ontap,
           child: Text(title)
         ),
-      ),
-    );
-  }
-}
-class Label extends StatelessWidget {
-  final String title;
-  Label({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.grey[300]!,
-            borderRadius: const BorderRadius.all(Radius.circular(80))),
-        margin: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        child: Text(title),
       ),
     );
   }

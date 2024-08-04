@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:tm_assessment/constant/config.dart';
 import 'package:tm_assessment/constant/widgets.dart';
 import 'package:tm_assessment/model/choc_model.dart';
@@ -20,17 +20,11 @@ class APIServices_Home {
       totalListChoc = TotalListChoc.fromJson(jsonDecode(res.body));
       return totalListChoc;
     } on SocketException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on TimeoutException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on HttpException {
-      GlobalWidget().showpopup(context, msg: "Sorry, unable to connect to the server. Please try again later", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "Sorry, unable to connect to the server.\nPlease try again later.", contentType: ContentType.warning);
     }
     return totalListChoc;
   }
@@ -46,17 +40,11 @@ class APIServices_Home {
       totalListChoc = TotalListChoc.fromJson(jsonDecode(res.body));
       return totalListChoc;
     } on SocketException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on TimeoutException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on HttpException {
-      GlobalWidget().showpopup(context, msg: "Sorry, unable to connect to the server. Please try again later", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "Sorry, unable to connect to the server.\nPlease try again later.", contentType: ContentType.warning);
     }
     return totalListChoc;
   }
@@ -72,17 +60,11 @@ class APIServices_Home {
       totalListChoc = TotalListChoc.fromJson(jsonDecode(res.body));
       return totalListChoc;
     } on SocketException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on TimeoutException {
-      GlobalWidget().showpopup(context, msg: "No Internet Connection. Please check your internet connection and try again later.", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "No Internet Connection.\nPlease check your internet connection and try again later.", contentType: ContentType.failure);
     } on HttpException {
-      GlobalWidget().showpopup(context, msg: "Sorry, unable to connect to the server. Please try again later", args: "2", ontap: (){
-        Navigator.pop(context);
-      });
+      GlobalWidget().popup(context, title: "Oh snap!", msg: "Sorry, unable to connect to the server.\nPlease try again later.", contentType: ContentType.warning);
     }
     return totalListChoc;
   }

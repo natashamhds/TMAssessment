@@ -1,12 +1,13 @@
+import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:tm_assessment/constant/config.dart';
-import 'package:tm_assessment/constant/widgets.dart';
-import 'package:tm_assessment/model/choc_model.dart';
 import 'package:tm_assessment/services/service_locator.dart';
 import 'package:tm_assessment/view%20model/home_viewmodel.dart';
+import 'package:tm_assessment/view/Home%20Screen/choc_screen.dart';
+import 'package:tm_assessment/view/Home%20Screen/month_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,33 +23,32 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      viewModel.getListData(context);
-      /// TODO: buat latest month as first load
-      viewModel.filterData(context, viewModel.displayMonthController.text);
-    }).then((value) {
-      /// TODO: stop loading
-
-    }).onError((error, stackTrace) {
-      /// TODO: stop loading
-
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    viewModel.displayMonthController.dispose();
-    viewModel.valueMonthController.dispose();
-
-    viewModel.top5Choc.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: buildUi(viewModel)
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: appBar(),
+        body: buildUi(viewModel)
+      ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      elevation: 0,
+      leading: const Icon(IconlyLight.category, color: Colors.black),
+      centerTitle: true,
+      title: Text("Products", style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500)))
     );
   }
 
@@ -57,133 +57,40 @@ class _HomeScreenState extends State<HomeScreen> {
       create: (context) => viewModel,
       child: Consumer<HomeViewModel>(
         builder: (context, model, child) => SafeArea(
-          child: SizedBox(
-            height: MediaQuery.sizeOf(context).height,
-            child: ColoredBox(color: Colors.white,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-
-                  // chocolate type
-                  // _chocType(viewModel.listChoc),
-
-                  // month form
-                  _month(viewModel.listMonth),
-
-                  // graph
-                  _graph(),
-
-                  // Label(title: "Top 5 Products"),
-                  _top5()
+          top: true, bottom: false, left: false, right: false,
+          child: Stack(
+            children: [
+             Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SegmentedTabControl(tabs: [
+                  SegmentTab(label: "Month", color: Colors.pink.shade200),
+                  SegmentTab(label: "Choc Type", color: Colors.purple.shade200)
                 ],
+                textStyle: GoogleFonts.poppins(textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                tabTextColor: Colors.black45,
+                selectedTabTextColor: Colors.white,
+                tabPadding: const EdgeInsets.symmetric(horizontal: 8),
+                squeezeIntensity: 2,
+                height: 45,
+                barDecoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(40)
+                ),
+                ),
+              ),
+          
+              Padding(
+                padding: const EdgeInsets.only(top: 70.0),
+                child: TabBarView(children: [
+                  FilterByMonth(),
+          
+                  FilterByChoc()
+                ]),
               )
-            )
-            ),
-          )
-          )
+            ],
+          ),
+        )
         ),
       );
-  }
-
-  // _top5() {
-  //   ...viewModel.listChoc.isEmpty ? const Text("No Data") :
-  //   ...viewModel.listChoc.map((e) => Column(
-  //     children: [
-  //       ListTile(
-  //         minLeadingWidth: 0,
-  //         minVerticalPadding: 0,
-  //         title: Text(e.title),
-  //       )
-  //     ],
-  //   )).toList(); 
-  // }
-  Widget _top5() {
-    return Column(
-      children: [
-        ...viewModel.top5Choc.map((e) => Column(
-          children: [
-            ListTile(
-              minLeadingWidth: 0,
-              minVerticalPadding: 0,
-              title: Text(e.title),
-              trailing: Text(e.value)
-            ),
-            const GlobalDivider()
-          ],
-        )).toList(),
-      ],
-    );
-  }
-
-  Widget _month(List<GlobalDualValue> month) {
-    List<Widget> bottomSheetContent = [
-      ...month.map((e) => ListTile(
-        minLeadingWidth: 0,
-        minVerticalPadding: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: e.value == viewModel.valueMonthController.text ? const GlobalRadioButtonCheck() : const GlobalRadioButton()),
-          onTap: () {
-            setState(() {
-              viewModel.displayMonthController.text = e.title;
-              viewModel.valueMonthController.text = e.value;
-
-              viewModel.filterData(context, viewModel.valueMonthController.text);
-            });
-            Navigator.pop(context);
-          },
-          title: Text(e.title),
-      )).toList()
-    ];
-
-    return GlobalForm(
-      typeInput: "1", 
-      controller: viewModel.displayMonthController, 
-      title: "Month", isReadOnly: true, 
-      ontap: () => GlobalWidget().modalBottom(context, listTile: bottomSheetContent, title: "Options"));
-  }
-
-  Widget _graph() {
-    List<ChartData> chartData = viewModel.top5Choc.map((e) => ChartData(e.title, int.parse(e.value))).toList();
-
-    return Container(
-      padding: const EdgeInsets.only(top: 40),
-      margin: const EdgeInsets.only(right: 5),
-      child: SfCartesianChart(
-        key: UniqueKey(),
-      plotAreaBorderColor: Colors.transparent,
-      primaryXAxis: const CategoryAxis(
-        axisLine: AxisLine(width: 0),
-        majorGridLines: MajorGridLines(width: 0),
-        majorTickLines: MajorTickLines(width: 0),
-      ),
-      primaryYAxis: NumericAxis(
-        majorGridLines: const MajorGridLines(width: 0),
-        majorTickLines: const MajorTickLines(width: .5),
-        axisLine: const AxisLine(width: 0),
-        numberFormat: NumberFormat.compact(),
-      ),
-      legend: const Legend(
-        position: LegendPosition.bottom,
-        isVisible: true,
-      ),
-      title: const ChartTitle(text: "Top 5 Chocolates"),
-      enableAxisAnimation: true,
-      series: <StackedLineSeries<ChartData, String>>[
-
-        StackedLineSeries(
-          markerSettings: const MarkerSettings(isVisible: true),
-          name: "Volume",
-          dataSource: chartData,
-          xValueMapper: (ChartData data, _) => data.chocolateType, 
-          yValueMapper: (ChartData data, _) => data.volume,
-          enableTooltip: true,
-          ),
-      ]
-
-    ));
   }
 }
