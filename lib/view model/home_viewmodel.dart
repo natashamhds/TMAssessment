@@ -41,13 +41,13 @@ class HomeViewModel extends ChangeNotifier {
 
   Future getListData(context) async {
     listMonth = [
-      GlobalDualValue(title: "JANUARY", value: "28-Jan"),
-      GlobalDualValue(title: "FEBRUARY", value: "28-Feb"),
-      GlobalDualValue(title: "MARCH", value: "28-Mar"),
-      GlobalDualValue(title: "APRIL", value: "28-Apr"),
-      GlobalDualValue(title: "MAY", value: "28-May"),
-      GlobalDualValue(title: "JUNE", value: "28-Jun"),
-      GlobalDualValue(title: "JULY", value: "28-Jul"),
+      GlobalDualValue(title: "January", value: "28-Jan"),
+      GlobalDualValue(title: "February", value: "28-Feb"),
+      GlobalDualValue(title: "March", value: "28-Mar"),
+      GlobalDualValue(title: "April", value: "28-Apr"),
+      GlobalDualValue(title: "May", value: "28-May"),
+      GlobalDualValue(title: "June", value: "28-Jun"),
+      GlobalDualValue(title: "July", value: "28-Jul"),
     ];
 
     listChoc = [
@@ -70,8 +70,8 @@ class HomeViewModel extends ChangeNotifier {
 
     DateTime prevMonth = DateTime(now.year, now.month - 1, now.day);
 
-    formattedPrevMonth = DateFormat('MMMM').format(prevMonth).toUpperCase();
-    abbreviatedPrevMonth = DateFormat('MMM').format(prevMonth).toUpperCase();
+    formattedPrevMonth = DateFormat('MMMM').format(prevMonth);
+    abbreviatedPrevMonth = DateFormat('MMM').format(prevMonth);
 
     notifyListeners();
   }
@@ -94,7 +94,11 @@ class HomeViewModel extends ChangeNotifier {
     var filteredChocolates = allData.where((e) => e.productionDate!.contains(month)).toList();
 
     /// sort by volume in descending order
-    filteredChocolates.sort((a, b) => b.volume!.compareTo(a.volume!));
+    filteredChocolates.sort((a, b) {
+      int volumeA = int.tryParse(a.volume!) ?? 0;
+      int volumeB = int.tryParse(b.volume!) ?? 0;
+      return volumeB.compareTo(volumeA);
+    });
 
     /// take the top 5
     var top5Chocolates = filteredChocolates.take(5).toList();
@@ -119,6 +123,7 @@ class HomeViewModel extends ChangeNotifier {
         }
 
     chocVolume.addAll(filteredChocolates.map((e) => GlobalDualValue(title: e.productionDate.toString(), value: e.volume.toString())).toList());
+    
     for (var choc in chocVolume) {
         debugPrint('Production Date: ${choc.title}, Volume: ${choc.value}');
         }

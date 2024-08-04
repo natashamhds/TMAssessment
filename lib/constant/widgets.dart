@@ -1,5 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GlobalWidget {
   RoundedRectangleBorder borderDialog() {
@@ -133,9 +135,9 @@ class GlobalForm extends StatelessWidget {
           left: 15,
           right: 10),
       title: Text(title,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13)),
+          style: GoogleFonts.poppins(textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 8.sp))),
       subtitle: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -149,10 +151,9 @@ class GlobalForm extends StatelessWidget {
                   ? const TextInputType.numberWithOptions(
                       signed: true, decimal: true)
                   : TextInputType.emailAddress,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize:
-                      13),
+              style:  GoogleFonts.poppins(textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 7.5.sp)),
               minLines: 1,
               maxLines: null,
 
@@ -160,7 +161,7 @@ class GlobalForm extends StatelessWidget {
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                 suffixIcon: isReadOnly
-                    ? const Icon(Icons.chevron_right)
+                    ? Icon(Icons.chevron_right, color: Colors.pink.shade200)
                     : Transform.scale(
                         scale: .4,
                         child:
@@ -221,3 +222,52 @@ class GlobalDivider extends StatelessWidget {
     return const Divider(indent: 20, endIndent: 20, height: 0);
   }
 }
+
+class chocTile extends StatelessWidget {
+  String title;
+  List list;
+  Widget? leadingImage;
+
+  chocTile({super.key, required this.title, required this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        children: [
+          ...list.map((e) => Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: title == "FilterByChoc" ?  Colors.purple.shade200 : Colors.pink.shade200,
+                  borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(10.0),
+                    ),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.pink.shade200.withOpacity(0.6),
+                      blurRadius: 8.0,
+                      offset: const Offset(1.1, 4.0)
+                      )
+                  ]
+                ),
+                child: ListTile(
+                  minLeadingWidth: 0,
+                  minVerticalPadding: 0,
+                  title: Text(e.title, style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))),
+                  trailing: Text(e.value, style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 9.sp))),
+                ),
+              ),
+              const GlobalDivider()
+            ],
+          )).toList()
+        ],
+      ),
+    );
+  }
+  }

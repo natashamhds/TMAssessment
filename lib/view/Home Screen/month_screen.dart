@@ -75,6 +75,8 @@ class _FilterByMonthState extends State<FilterByMonth> {
 
               // graph
               _graph(),
+
+              const SizedBox(height: 20),
               
               // top5
               _top5()
@@ -87,21 +89,7 @@ class _FilterByMonthState extends State<FilterByMonth> {
   }
 
   Widget _top5() {
-    return Column( 
-      children: [
-        ...viewModel.top5Choc.map((e) => Column(
-          children: [
-            ListTile(
-              minLeadingWidth: 0,
-              minVerticalPadding: 0,
-              title: Text(e.title),
-              trailing: Text(e.value)
-            ),
-            const GlobalDivider()
-          ],
-        )).toList(),
-      ],
-    );
+    return chocTile(title: "FilterByMonth", list: viewModel.top5Choc);
   }
 
   Widget _month(List<GlobalDualValue> month) {
@@ -138,7 +126,15 @@ class _FilterByMonthState extends State<FilterByMonth> {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),  
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(255, 126, 49, 173).withOpacity(0.6),
+              blurRadius: 8.0,
+              offset: const Offset(1.1, 4.0)
+            )
+          ],
+          borderRadius: BorderRadius.circular(20),  
         gradient: const LinearGradient(colors: [
           Color(0xFFE1BEE7), 
           Color.fromARGB(255, 126, 49, 173),
