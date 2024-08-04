@@ -34,6 +34,9 @@ class ChocModel  {
     data['volume'] = this.volume;
     return data;
   }
+
+  @override
+  String toString() { return 'choclateType: $chocolateType | volume: $volume \n';}
 }
 
 class ChartData {

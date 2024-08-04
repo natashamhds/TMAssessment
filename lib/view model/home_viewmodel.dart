@@ -93,12 +93,17 @@ class HomeViewModel extends ChangeNotifier {
 
     var filteredChocolates = allData.where((e) => e.productionDate!.contains(month)).toList();
 
+    // print(filteredChocolates);
+
     /// sort by volume in descending order
     filteredChocolates.sort((a, b) {
+      /// convert volume string to int
       int volumeA = int.tryParse(a.volume!) ?? 0;
       int volumeB = int.tryParse(b.volume!) ?? 0;
       return volumeB.compareTo(volumeA);
     });
+
+    // print('sini\n\n $filteredChocolates');
 
     /// take the top 5
     var top5Chocolates = filteredChocolates.take(5).toList();
