@@ -13,10 +13,7 @@ class GlobalWidget {
   BoxDecoration bottomsheetdeco() {
     return const BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10.0),
-        topRight: Radius.circular(10.0),
-      ),
+      borderRadius: BorderRadius.all(Radius.circular(10))
     );
   }
 
@@ -35,7 +32,7 @@ class GlobalWidget {
         children: [
           Text(title,
               style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  GoogleFonts.poppins(textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
           InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
@@ -57,21 +54,25 @@ class GlobalWidget {
         shape: GlobalWidget().borderDialog(),
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        builder: (BuildContext context) => InkWell(
-          onTap: ()=> Navigator.pop(context),
-          child: DecoratedBox(
-            decoration: GlobalWidget().bottomsheetdeco(),
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                GlobalWidget().iconsheet(),
-          
-                GlobalWidget().headerMenu(context, title),
-          
-                ...listTile,
-          
-                const SizedBox(height: 30)
-              ],
+        isDismissible: true,
+        builder: (BuildContext context) => Container(
+          margin: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+          child: InkWell(
+            onTap: ()=> Navigator.pop(context),
+            child: DecoratedBox(
+              decoration: GlobalWidget().bottomsheetdeco(),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  GlobalWidget().iconsheet(),
+            
+                  GlobalWidget().headerMenu(context, title),
+            
+                  ...listTile,
+            
+                  const SizedBox(height: 30)
+                ],
+              ),
             ),
           ),
         )
@@ -99,7 +100,7 @@ class GlobalRadioButtonCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(Icons.radio_button_checked, color: title == "Chocolate" ?Colors.purple.shade200 : Colors.pink.shade200, size: 18);
+    return Icon(Icons.radio_button_checked, color: title == "Chocolate" ?Colors.purple.shade200 : Colors.pink.shade200, size: 20);
   }
 }
 

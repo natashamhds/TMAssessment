@@ -115,7 +115,7 @@ class _FilterByMonthState extends State<FilterByMonth> {
             });
             Navigator.pop(context);
           },
-          title: Text(e.title),
+          title: Text(e.title, style: GoogleFonts.poppins()),
       )).toList()
     ];
 
